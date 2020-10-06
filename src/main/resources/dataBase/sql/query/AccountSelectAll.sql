@@ -1,1 +1,1 @@
-select * from ACCOUNTS
+select * from accounts;

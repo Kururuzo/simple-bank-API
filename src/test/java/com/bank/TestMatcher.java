@@ -1,5 +1,6 @@
 package com.bank;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ public class TestMatcher<T> {
 
     public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
         if (usingEquals) {
-            assertThat(actual).isEqualTo(expected);
+                assertThat(actual).isEqualTo(expected);
         } else {
             assertThat(actual).usingElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
         }

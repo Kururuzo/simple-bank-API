@@ -1,7 +1,6 @@
 package com.bank.repository;
 
 import com.bank.model.Client;
-import org.h2.jdbcx.JdbcDataSource;
 import org.h2.tools.RunScript;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,26 +17,45 @@ import java.util.List;
 import static com.bank.ClientTestData.*;
 
 public class ClientRepositoryImplTest {
-    public static final String DB_URL = "jdbc:h2:mem:bank;"
-            + "DB_CLOSE_DELAY=-1;"
-            + "DATABASE_TO_UPPER=false;";
 
     private static ClientRepository clientRepository;
-    private static JdbcDataSource dataSource;
 
     @BeforeClass
     public static void setup() {
-        dataSource = new JdbcDataSource();
-        dataSource.setURL(DB_URL);
-        clientRepository = new ClientRepositoryImpl(dataSource);
+        clientRepository = new ClientRepositoryImpl(Utils.getDataSource());
     }
 
     @Before
     public void setUp() {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = Utils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getClientById(){
+        Client client = null;
+        try {
+            client = clientRepository.getClientById(CLIENT_1_ID);
+            CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getAllClients() {
+        try {
+            List<Client> allClients = clientRepository.getAll();
+            Collections.sort(allClients, clientComparator);
+
+            Assert.assertEquals(allClients.size(), 2);
+            CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -60,19 +78,6 @@ public class ClientRepositoryImplTest {
     }
 
     @Test
-    public void getClientById(){
-        Client client = null;
-        try {
-            client = clientRepository.getClientById(CLIENT_1_ID);
-            CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
-    }
-
-    @Test
     public void updateClient(){
         try {
             Client client = Client.builder()
@@ -92,13 +97,10 @@ public class ClientRepositoryImplTest {
     @Test
     public void deleteClient(){
         try{
-            clientRepository.addClient(CLIENT_1);
-            clientRepository.addClient(CLIENT_2);
-            clientRepository.addClient(CLIENT_3);
-            clientRepository.deleteClient(CLIENT_3);
+            clientRepository.deleteClient(CLIENT_2);
             List<Client> clients = clientRepository.getAll();
-            CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
-
+            Assert.assertEquals(1, clients.size());
+            CLIENTS_MATCHER.assertMatch(clients.get(0), CLIENT_1);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -108,32 +110,20 @@ public class ClientRepositoryImplTest {
 
 
 
-    @Test
-    public void getAllClients() {
-        try {
-            List<Client> allClients = clientRepository.getAll();
-            Collections.sort(allClients, clientComparator);
 
-            Assert.assertEquals(allClients.size(), 2);
-            CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 //
 //    @Test
 //    public void getById() {
 //        try {
-//            Client client = clientRepository.getById(CLIENT_1_ID);
+//            Client client = clientRepository.getClientById(CLIENT_1_ID);
 //            CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
 //    }
-//
+
 //    @Test
 //    public void getByAccountId() {
 //        try {

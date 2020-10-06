@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.sql.DataSource;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
@@ -23,23 +24,17 @@ import static com.bank.AccountTestData.*;
 import static com.bank.CreditCardTestData.CARD_1;
 
 public class AccountRepositoryImplTest {
-    public static final String DB_URL = "jdbc:h2:mem:bank;"
-            + "DB_CLOSE_DELAY=-1;"
-            + "DATABASE_TO_UPPER=false;";
 
     private static AccountRepository repository;
-    private static JdbcDataSource dataSource;
 
     @BeforeClass
     public static void setup() {
-        dataSource = new JdbcDataSource();
-        dataSource.setURL(DB_URL);
-        repository = new AccountRepositoryImpl(dataSource);
+        repository = new AccountRepositoryImpl(Utils.getDataSource());
     }
 
     @Before
     public void setUp() {
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = Utils.getConnection()){
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {
@@ -47,49 +42,52 @@ public class AccountRepositoryImplTest {
         }
     }
 
-//    @Test
-//    public void checkBalanceByAccountNumber() {
-//        try {
-//            BigDecimal d = repository.checkBalanceByAccountNumber(ACCOUNT_1.getNumber());
-//            Assert.assertEquals(d, ACCOUNT_1.getAmount());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void checkBalanceByAccountNumber() {
+        try {
+            BigDecimal d = repository.checkBalanceByAccountNumber(ACCOUNT_1.getNumber());
+            Assert.assertEquals(0, d.compareTo(ACCOUNT_1.getAmount()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-//    @Test
-//    public void checkBalanceByAccountId() {
-//        try {
-//            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
-//            Assert.assertEquals(d, ACCOUNT_1.getAmount());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void checkBalanceByAccountId() {
+        try {
+            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
+            Assert.assertEquals(0, d.compareTo(ACCOUNT_1.getAmount()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-//    @Test
-//    public void depositFunds() {
-//        try {
-//            BigDecimal deposite = new BigDecimal(1000).setScale(2);
-//            boolean success = repository.depositFunds(ACCOUNT_1.getNumber(), deposite);
-//            Assert.assertTrue(success);
-//            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
-//            BigDecimal expected = ACCOUNT_1.getAmount().add(deposite);
-//            Assert.assertEquals(expected, d);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void depositFunds() {
+        try {
+            BigDecimal deposite = new BigDecimal(1000);
+            boolean success = repository.depositFunds(ACCOUNT_1.getNumber(), deposite);
+            Assert.assertTrue(success);
+            BigDecimal d = repository.checkBalanceByAccountId(ACCOUNT_1.getId());
+            BigDecimal expected = ACCOUNT_1.getAmount().add(deposite);
+            Assert.assertEquals(expected, d);
+            Assert.assertEquals(0, d.compareTo(expected));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-//    @Test
-//    public void getAccountListByClientId() {
-//        try {
-//            List<Account> accountListByClientId = repository.getAccountListByClientId(ClientTestData.CLIENT_1_ID);
-//            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(accountListByClientId, Arrays.asList(ACCOUNT_1));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void getAccountListByClientId() {
+        try {
+            List<Account> accountListByClientId = repository.getAccountListByClientId(ClientTestData.CLIENT_1_ID);
+            Assert.assertEquals(1, accountListByClientId.size());
+            Account account = accountListByClientId.get(0);
+            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, ACCOUNT_1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void getCreditCardListByAccountId() {

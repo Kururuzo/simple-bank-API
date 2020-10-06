@@ -1,1 +1,1 @@
-delete from CLIENTS where ID = ?
+delete from clients where id = ?

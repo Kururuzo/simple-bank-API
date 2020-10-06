@@ -36,6 +36,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         if (resultSet.next()) {
             amount = resultSet.getBigDecimal("amount");
         }
+
         resultSet.close();
         ps.close();
         Utils.closeQuietly(conn);
