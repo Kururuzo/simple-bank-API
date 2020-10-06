@@ -19,7 +19,15 @@ public enum SqlScripts {
 
     GET_CLIENT_BY_ID("dataBase/sql/query/GetClientByID.sql"),
 
-    DELETE_CLIENT("dataBase/sql/query/DeleteClient.sql");
+    DELETE_CLIENT("dataBase/sql/query/DeleteClient.sql"),
+
+    ADD_CLIENT_ACCOUNT("dataBase/sql/query/AddClientAccount.sql"),
+
+    GET_ALL_CLIENT_ACCOUNTS("dataBase/sql/query/GetAllClientIAccounts.sql"),
+
+    GET_ACCOUNT_BY_CLIENT_ID("dataBase/sql/query/GetAccountByClientId.sql"),
+
+    ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql");
 
     private final String path;
 

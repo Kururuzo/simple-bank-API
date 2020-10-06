@@ -3,6 +3,7 @@ package com.bank.repository;
 import com.bank.ClientTestData;
 import com.bank.CreditCardTestData;
 import com.bank.model.Account;
+import com.bank.model.Client;
 import com.bank.model.CreditCard;
 import org.h2.jdbcx.JdbcDataSource;
 import org.h2.tools.RunScript;
@@ -47,6 +48,22 @@ public class AccountRepositoryImplTest {
         }
     }
 
+    @Test
+    public void addAccount(){
+        try {
+            Client client = Client.builder().id(1).name("Ivan").email("test@mail.ru").build();
+            Account account =Account.builder()
+                    .id(1)
+                    .client(client)
+                    .number("40817810500550987654")
+                    .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
+                    .currency("RUB")
+                    .build();
+            repository.addAccount(client, account);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 //    @Test
 //    public void checkBalanceByAccountNumber() {
 //        try {
@@ -91,38 +108,38 @@ public class AccountRepositoryImplTest {
 //        }
 //    }
 
-    @Test
-    public void getCreditCardListByAccountId() {
-        try {
-            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
-            Assert.assertEquals(1, cardList.size());
-            Assert.assertEquals(cardList.get(0).getNumber(), CARD_1.getNumber());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void addCreditCard() {
-        try {
-            String newNumber = "0000000000";
-            repository.addCreditCard(ACCOUNT_1.getId(), newNumber);
-            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
-            Assert.assertEquals(2, cardList.size());
-            Collections.sort(cardList, CreditCardTestData.creditCardComparator);
-            Assert.assertEquals(newNumber, cardList.get(1).getNumber());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    @Test
-    public void isCardNumberExists() {
-        try {
-            Assert.assertTrue(repository.isCardNumberExists(CARD_1.getNumber()));
-            Assert.assertFalse(repository.isCardNumberExists("00000000x"));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
+//    @Test
+//    public void getCreditCardListByAccountId() {
+//        try {
+//            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
+//            Assert.assertEquals(1, cardList.size());
+//            Assert.assertEquals(cardList.get(0).getNumber(), CARD_1.getNumber());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void addCreditCard() {
+//        try {
+//            String newNumber = "0000000000";
+//            repository.addCreditCard(ACCOUNT_1.getId(), newNumber);
+//            List<CreditCard> cardList = repository.getCreditCardListByAccountId(ACCOUNT_1.getId());
+//            Assert.assertEquals(2, cardList.size());
+//            Collections.sort(cardList, CreditCardTestData.creditCardComparator);
+//            Assert.assertEquals(newNumber, cardList.get(1).getNumber());
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void isCardNumberExists() {
+//        try {
+//            Assert.assertTrue(repository.isCardNumberExists(CARD_1.getNumber()));
+//            Assert.assertFalse(repository.isCardNumberExists("00000000x"));
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//    }
 }

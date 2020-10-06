@@ -6,17 +6,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ResourceReader {
-    private static ResourceReader instance;
+//    private static ResourceReader instance;
 
     public ResourceReader(){}
 
-    public ResourceReader get(){
-        if (instance == null){
-            instance = new ResourceReader();
-        }
-        return instance;
-    }
-
+//    public ResourceReader get(){
+//        if (instance == null){
+//            instance = new ResourceReader();
+//        }
+//        return instance;
+//    }
+//
     public synchronized String getSQL(String fileName) {
 //        InputStream is = ResourceReader.class.getResourceAsStream("/AccountSelectAll.sql");
 //

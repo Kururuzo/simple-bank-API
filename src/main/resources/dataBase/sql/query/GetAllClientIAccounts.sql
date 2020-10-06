@@ -1,0 +1,1 @@
+select ID, NUMBER,AMOUNT, CURRENCY from ACCOUNTS where CLIENTS_ID = ?

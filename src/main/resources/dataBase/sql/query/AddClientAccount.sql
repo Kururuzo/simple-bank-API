@@ -1,0 +1,1 @@
+insert into ACCOUNTS (id, clients_id, number, amount, currency) values ( ?, ?, ?, ?, ? )

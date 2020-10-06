@@ -43,7 +43,7 @@ public class ClientRepositoryImplTest {
     }
 
     @Test
-    public void addClient(){
+    public void addClient() {
         try {
             Client client = Client.builder()
                     .id(CLIENT_3.getId())
@@ -53,27 +53,24 @@ public class ClientRepositoryImplTest {
             clientRepository.addClient(client);
             List<Client> allClients = clientRepository.getAll();
             CLIENTS_MATCHER.assertMatch(allClients, CLIENT_1, CLIENT_2, client);
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
     @Test
-    public void getClientById(){
-        Client client = null;
+    public void getClientById() {
+        Client client;
         try {
             client = clientRepository.getClientById(CLIENT_1_ID);
             CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-
     }
 
     @Test
-    public void updateClient(){
+    public void updateClient() {
         try {
             Client client = Client.builder()
                     .id(CLIENT_3.getId())
@@ -90,15 +87,14 @@ public class ClientRepositoryImplTest {
     }
 
     @Test
-    public void deleteClient(){
-        try{
+    public void deleteClient() {
+        try {
             clientRepository.addClient(CLIENT_1);
             clientRepository.addClient(CLIENT_2);
             clientRepository.addClient(CLIENT_3);
             clientRepository.deleteClient(CLIENT_3);
             List<Client> clients = clientRepository.getAll();
             CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -106,21 +102,18 @@ public class ClientRepositoryImplTest {
     }
 
 
-
-
     @Test
     public void getAllClients() {
         try {
             List<Client> allClients = clientRepository.getAll();
             Collections.sort(allClients, clientComparator);
-
             Assert.assertEquals(allClients.size(), 2);
             CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
 //

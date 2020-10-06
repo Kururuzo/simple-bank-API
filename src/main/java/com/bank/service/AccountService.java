@@ -25,52 +25,52 @@ public class AccountService {
         this.clientRepository = new ClientRepositoryImpl(dataSource);
     }
 
-    //    Проверка баланса
-    public BigDecimal checkBalance(Account account) {
-        try {
-            return repository.checkBalanceByAccountId(account.getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void depositeFunds(Account account, BigDecimal amount) {
-        try {
-            boolean success = repository.depositFunds(account.getNumber(), amount);
-            if (!success) {
-                throw new SQLException("Exception! Funds have not been made!");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<CreditCard> getListOfCreditCards(Client client) {
-        try {
-            List<Account> accountList = repository.getAccountListByClientId(client.getId());
-            if (accountList.size() < 1) {
-                throw new SQLException("For Client with Id = " + client.getId() + ", no cards was found!");
-            }
-
-            List<CreditCard> cardList = new ArrayList<>();
-            for (Account account : accountList) {
-                List<CreditCard> cards = repository.getCreditCardListByAccountId(account.getId());
-                if (!cards.isEmpty()) {
-                    cardList.addAll(cards);
-                }
-            }
-
-            if (cardList.size() < 1) {
-                throw new SQLException("For Client with Id = " + client.getId() + ", no cards was found!");
-            }
-
-            return cardList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    //    Проверка баланса
+//    public BigDecimal checkBalance(Account account) {
+//        try {
+//            return repository.checkBalanceByAccountId(account.getId());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    public void depositeFunds(Account account, BigDecimal amount) {
+//        try {
+//            boolean success = repository.depositFunds(account.getNumber(), amount);
+//            if (!success) {
+//                throw new SQLException("Exception! Funds have not been made!");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public List<CreditCard> getListOfCreditCards(Client client) {
+//        try {
+//            List<Account> accountList = repository.getAccountListByClientId(client.getId());
+//            if (accountList.size() < 1) {
+//                throw new SQLException("For Client with Id = " + client.getId() + ", no cards was found!");
+//            }
+//
+//            List<CreditCard> cardList = new ArrayList<>();
+//            for (Account account : accountList) {
+//                List<CreditCard> cards = repository.getCreditCardListByAccountId(account.getId());
+//                if (!cards.isEmpty()) {
+//                    cardList.addAll(cards);
+//                }
+//            }
+//
+//            if (cardList.size() < 1) {
+//                throw new SQLException("For Client with Id = " + client.getId() + ", no cards was found!");
+//            }
+//
+//            return cardList;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
 //    public CreditCard creditCardIssue(Account account) {
 //        try {
