@@ -31,9 +31,9 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void addAccount(Client client, Account account) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
-        Connection connection = getConnection();
-        try(PreparedStatement ps = connection.prepareStatement(sql)){
+        String sql = resourceReader.getSQL(SqlScripts.ADD_ACCOUNT.getPath());
+
+        try(Connection connection = getConnection();PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, client.getId());
             ps.setString(2, account.getNumber());
             ps.setBigDecimal(3, account.getAmount());
@@ -45,8 +45,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account getAccountByClientId(Client client) throws SQLException {
         String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, client.getId());
             ResultSet rs = stmt.executeQuery();
             Account account = null;
@@ -70,8 +70,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public List<Account> getAllClientAccounts(Client client) throws SQLException {
         String sql = resourceReader.getSQL(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, client.getId());
             ResultSet rs = stmt.executeQuery();
             List<Account> accounts = new ArrayList<>();
@@ -92,7 +92,13 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-//    @Override
+    @Override
+    public void updateAccount(Client client, Account account) {
+        String sql = resourceReader.getSQL(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
+
+    }
+
+    //    @Override
 //    public BigDecimal checkBalanceByAccountNumber(String accountNumber) throws SQLException {
 //        Connection conn = getConnection();
 //        PreparedStatement ps = conn.prepareStatement(SQL_GET_AMOUNT_BY_ACCOUNT_NUMBER);

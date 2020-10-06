@@ -1,1 +1,1 @@
-select ID, NAME, EMAIL, REGISTERED from CLIENTS where ID = ?
+select id, name, email, registered from clients where id = ?

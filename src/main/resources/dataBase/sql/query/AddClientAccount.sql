@@ -1,1 +1,1 @@
-insert into ACCOUNTS (id, clients_id, number, amount, currency) values ( ?, ?, ?, ?, ? )
+insert into accounts (id, clients_id, number, amount, currency) values ( ?, ?, ?, ?, ? )

@@ -23,18 +23,20 @@ public class ClientRepositoryImplTest {
             + "DATABASE_TO_UPPER=false;";
 
     private static ClientRepository clientRepository;
-    private static JdbcDataSource dataSource;
+//    private static JdbcDataSource dataSource;
 
     @BeforeClass
     public static void setup() {
-        dataSource = new JdbcDataSource();
-        dataSource.setURL(DB_URL);
-        clientRepository = new ClientRepositoryImpl(dataSource);
+//        dataSource = new JdbcDataSource();
+//        dataSource.setURL(DB_URL);
+//        clientRepository = new ClientRepositoryImpl(dataSource);
+        clientRepository = new ClientRepositoryImpl(Utils.getDataSource());
     }
 
     @Before
     public void setUp() {
-        try (Connection connection = dataSource.getConnection()) {
+//        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = Utils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {
@@ -46,9 +48,9 @@ public class ClientRepositoryImplTest {
     public void addClient() {
         try {
             Client client = Client.builder()
-                    .id(CLIENT_3.getId())
-                    .name(CLIENT_3.getName())
-                    .email(CLIENT_3.getEmail())
+                    .id(100006)
+                    .name("newName")
+                    .email("new@mail.ru")
                     .build();
             clientRepository.addClient(client);
             List<Client> allClients = clientRepository.getAll();
@@ -89,10 +91,13 @@ public class ClientRepositoryImplTest {
     @Test
     public void deleteClient() {
         try {
-            clientRepository.addClient(CLIENT_1);
-            clientRepository.addClient(CLIENT_2);
-            clientRepository.addClient(CLIENT_3);
-            clientRepository.deleteClient(CLIENT_3);
+            Client client = Client.builder()
+                    .name("update name")
+                    .email("update@mail.ru")
+                    .build();
+            clientRepository.addClient(client);
+            Client client1 = clientRepository.getClientById(100006);
+            clientRepository.deleteClient(client1);
             List<Client> clients = clientRepository.getAll();
             CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
         } catch (SQLException throwables) {
@@ -100,6 +105,7 @@ public class ClientRepositoryImplTest {
         }
 
     }
+
 
 
     @Test

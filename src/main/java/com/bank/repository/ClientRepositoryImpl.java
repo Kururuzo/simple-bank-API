@@ -148,8 +148,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     public boolean deleteClient(Client client) throws SQLException {
         String sql = resourceReader.getSQL(SqlScripts.DELETE_CLIENT.getPath());
         Connection connection = getConnection();
-        try(PreparedStatement stmt = connection.prepareStatement(sql)){
-            int rows = stmt.executeUpdate();
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1,client.getId());
+            int rows = ps.executeUpdate();
             if (rows != 0)return true;
         }
         return false;

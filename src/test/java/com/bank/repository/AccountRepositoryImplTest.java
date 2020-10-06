@@ -29,6 +29,8 @@ public class AccountRepositoryImplTest {
 //            + "DATABASE_TO_UPPER=false;";
 
     private static AccountRepository repository;
+    private static ClientRepository clientRepository;
+
 //    private static JdbcDataSource dataSource;
 
     @BeforeClass
@@ -37,6 +39,7 @@ public class AccountRepositoryImplTest {
 //        dataSource.setURL(DB_URL);
 //        repository = new AccountRepositoryImpl(dataSource);
         repository = new AccountRepositoryImpl(Utils.getDataSource());
+        clientRepository = new ClientRepositoryImpl(Utils.getDataSource());
     }
 
     @Before
@@ -53,18 +56,46 @@ public class AccountRepositoryImplTest {
     @Test
     public void addAccount(){
         try {
-            Client client = Client.builder().id(1).name("Ivan").email("test@mail.ru").build();
+            Client client = Client.builder().id(100_006).name("Ivan").email("test@mail.ru").build();
+
             Account account =Account.builder()
-                    .id(1)
                     .client(client)
                     .number("40817810500550987654")
                     .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
                     .currency("RUB")
                     .build();
             repository.addAccount(client, account);
+            Account account1 = repository.getAccountByClientId(client);
+            Assert.assertEquals(account,account1);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Test
+    public void getAllAccounts(){
+        try {
+            Client client = Client.builder().id(100006).name("Den").email("den@mail.ru").build();
+            Account account = Account.builder()
+                    .number("111111")
+                    .currency("RUB")
+                    .amount(new BigDecimal(1000))
+                    .client(client)
+                    .build();
+            Account account1 = Account.builder()
+                    .number("222222")
+                    .currency("RUB")
+                    .amount(new BigDecimal(2000))
+                    .client(client)
+                    .build();
+            repository.addAccount(client, account);
+            repository.addAccount(client, account1);
+            List<Account> allClientAccounts = repository.getAllClientAccounts(client);
+            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(allClientAccounts, account,account1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 //    @Test
 //    public void checkBalanceByAccountNumber() {

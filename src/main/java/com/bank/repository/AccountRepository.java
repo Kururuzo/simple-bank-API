@@ -16,6 +16,10 @@ public interface AccountRepository {
 
     Account getAccountByClientId(Client client) throws SQLException;
 
+    void updateAccount(Client client, Account account);
+
+
+
 
 //    BigDecimal checkBalanceByAccountNumber(String accountNumber) throws SQLException;
 //    BigDecimal checkBalanceByAccountId(Integer accountId) throws SQLException;
