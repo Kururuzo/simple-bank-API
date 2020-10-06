@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@Builder
 public class Account {
     private Integer id;
     private Client client;

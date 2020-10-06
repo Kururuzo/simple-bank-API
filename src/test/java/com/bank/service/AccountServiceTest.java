@@ -61,14 +61,14 @@ public class AccountServiceTest {
 //        Assert.assertEquals(balance, newBalance);
 //    }
 
-    @Test
-    public void getListOfCreditCards() {
-        List<CreditCard> cards = Arrays.asList(CARD_1);
-
-        List<CreditCard> clientOneCards = service.getListOfCreditCards(CLIENT_1);
-        Assert.assertEquals(1, clientOneCards.size());
-        CARD_MATCHER.assertMatch(clientOneCards.get(0), CARD_1);
-    }
+//    @Test
+//    public void getListOfCreditCards() {
+//        List<CreditCard> cards = Arrays.asList(CARD_1);
+//
+//        List<CreditCard> clientOneCards = service.getListOfCreditCards(CLIENT_1);
+//        Assert.assertEquals(1, clientOneCards.size());
+//        CARD_MATCHER.assertMatch(clientOneCards.get(0), CARD_1);
+//    }
 
 //    @Test
 //    public void creditCardIssue() {

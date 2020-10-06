@@ -1,5 +1,6 @@
 package com.bank.repository;
 
+import com.bank.model.Account;
 import com.bank.model.Client;
 
 import javax.sql.DataSource;
@@ -12,19 +13,20 @@ import java.util.List;
 
 public class ClientRepositoryImpl implements ClientRepository {
 
-//    private static final String SQL_GET_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
-//    private static final String SQL_GET_ALL_CLIENTS = "SELECT * FROM clients";
-//    private static final String SQL_ADD_CLIENT = "INSERT INTO clients (name, email) VALUES (?, ?)";
-//
-//    private static final String SQL_GET_CLIENT_BY_ACCOUNT_ID = "SELECT * FROM clients WHERE id = " +
-//            "(SELECT clients_id FROM accounts WHERE id = ?)";
+    private static final String SQL_GET_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
+    private static final String SQL_GET_ALL_CLIENTS = "SELECT * FROM clients";
+    private static final String SQL_ADD_CLIENT = "INSERT INTO clients (name, email) VALUES (?, ?)";
+
+
+    private static final String SQL_GET_CLIENT_BY_ACCOUNT_ID = "SELECT * FROM clients WHERE id = " +
+            "(SELECT clients_id FROM accounts WHERE id = ?)";
 
     private DataSource dataSource;
-    private ResourceReader resourceReader;
+    private ResourceReader resourceReader = new ResourceReader();
+
 
     public ClientRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.resourceReader = new ResourceReader().get();
     }
 
 
@@ -76,37 +78,11 @@ public class ClientRepositoryImpl implements ClientRepository {
 //    }
 
     @Override
-    public Client getClientById(Integer id) throws SQLException {
-//        ResourceReader resourceReader = new ResourceReader().get();
-        String sql = resourceReader.getSQL(SqlScripts.GET_CLIENT_BY_ID.getPath());
-
-        try (Connection connection = getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Client client = Client.builder()
-                        .id(rs.getInt(1))
-                        .name(rs.getString(2))
-                        .email(rs.getString(3))
-                        .registered(rs.getTimestamp(4))
-                        .build();
-                return client;
-            }
-        }
-        return new Client();
-    }
-
-    @Override
     public List<Client> getAll() throws SQLException {
-//        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.SELECT_ALL_CLIENTS.getPath());
-
-        try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery();) {
-
-//            ResultSet resultSet = ps.executeQuery();
+        Connection connection = getConnection();
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ResultSet resultSet = ps.executeQuery();
 
             List<Client> clientList = new ArrayList<>();
             while (resultSet.next()) {
@@ -127,11 +103,9 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void addClient(Client client) throws SQLException {
-//        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.ADD_CLIENT.getPath());
-
-        try ( Connection connection = getConnection();
-              PreparedStatement ps = connection.prepareStatement(sql)) {
+        Connection connection = getConnection();
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, client.getName());
             ps.setString(2, client.getEmail());
             ps.execute();
@@ -141,11 +115,9 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void updateClient(Client client) throws SQLException {
-//        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.ADD_CLIENT.getPath());
-
-        try ( Connection connection = getConnection();
-              PreparedStatement stmt = connection.prepareStatement(sql)) {
+        Connection connection = getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, client.getName());
             stmt.setString(2, client.getEmail());
             stmt.execute();
@@ -153,17 +125,49 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public boolean deleteClient(Client client) throws SQLException {
-//        ResourceReader resourceReader = new ResourceReader().get();
-        String sql = resourceReader.getSQL(SqlScripts.DELETE_CLIENT.getPath());
+    public Client getClientById(Integer id) throws SQLException {
+        String sql = resourceReader.getSQL(SqlScripts.GET_CLIENT_BY_ID.getPath());
+        Connection connection = getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Client client = Client.builder()
+                        .id(rs.getInt(1))
+                        .name(rs.getString(2))
+                        .email(rs.getString(3))
+                        .registered(rs.getDate(4))
+                        .build();
+                return client;
+            }
+        }
+        return new Client();
+    }
 
-        try (Connection connection = getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, client.getId());
-            int rows = stmt.executeUpdate();
-            if (rows != 0) return true;
+    @Override
+    public boolean deleteClient(Client client) throws SQLException {
+        String sql = resourceReader.getSQL(SqlScripts.DELETE_CLIENT.getPath());
+        Connection connection = getConnection();
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1,client.getId());
+            int rows = ps.executeUpdate();
+            if (rows != 0)return true;
         }
         return false;
+    }
+
+    @Override
+    public void addClientAccount(Client client, Account account) throws SQLException {
+        String sql = resourceReader.getSQL(SqlScripts.ADD_CLIENT_ACCOUNT.getPath());
+        Connection connection = getConnection();
+        try(PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, account.getId());
+            ps.setInt(2, client.getId());
+            ps.setString(3, account.getNumber());
+            ps.setBigDecimal(4, account.getAmount());
+            ps.setString(5, account.getCurrency());
+            ps.execute();
+        }
     }
 
 

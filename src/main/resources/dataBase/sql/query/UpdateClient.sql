@@ -1,1 +1,1 @@
-UPDATE clients SET name = ?, email = ? WHERE id = ?
+update clients set name = ?, email = ?  where id = ?
