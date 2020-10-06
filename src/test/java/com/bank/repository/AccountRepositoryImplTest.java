@@ -24,23 +24,25 @@ import static com.bank.AccountTestData.*;
 import static com.bank.CreditCardTestData.CARD_1;
 
 public class AccountRepositoryImplTest {
-    public static final String DB_URL = "jdbc:h2:mem:bank;"
-            + "DB_CLOSE_DELAY=-1;"
-            + "DATABASE_TO_UPPER=false;";
+//    public static final String DB_URL = "jdbc:h2:mem:bank;"
+//            + "DB_CLOSE_DELAY=-1;"
+//            + "DATABASE_TO_UPPER=false;";
 
     private static AccountRepository repository;
-    private static JdbcDataSource dataSource;
+//    private static JdbcDataSource dataSource;
 
     @BeforeClass
     public static void setup() {
-        dataSource = new JdbcDataSource();
-        dataSource.setURL(DB_URL);
-        repository = new AccountRepositoryImpl(dataSource);
+//        dataSource = new JdbcDataSource();
+//        dataSource.setURL(DB_URL);
+//        repository = new AccountRepositoryImpl(dataSource);
+        repository = new AccountRepositoryImpl(Utils.getDataSource());
     }
 
     @Before
     public void setUp() {
-        try (Connection connection = dataSource.getConnection()){
+//        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = Utils.getConnection()){
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {

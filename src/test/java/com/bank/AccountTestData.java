@@ -11,6 +11,6 @@ public class AccountTestData {
             TestMatcher.usingFieldsComparator(Account.class, "client");
 
     public static final Account ACCOUNT_1 =
-            new Account(100002, CLIENT_1, "1111111111", new BigDecimal(1000), "RUB");
+            new Account(100002, CLIENT_1, "1111111111", new BigDecimal(1000).setScale(2), "RUB");
 
 }
