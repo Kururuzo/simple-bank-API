@@ -10,36 +10,47 @@ public interface ClientRepository {
 
     /**
      *
-     * Метод возвращает список всех клиентов в БД
+     * @return
+     * @throws SQLException
+     * find all clients
      */
     List<Client> getAll() throws SQLException;
 
 
     /**
      *
-     * Добавление клиента
+     * @param client
+     * @throws SQLException
+     * add new client
      */
     void addClient(Client client) throws SQLException;
 
     /**
      *
-     * изменение клиента
+     * @param client
+     * @throws SQLException
+     * update client
      */
     void updateClient(Client client) throws SQLException;
 
     /**
      *
-     * поиск клиента по ID
+     * @param id
+     * @return
+     * @throws SQLException
+     * find client by id
      */
     Client getClientById(Integer id) throws SQLException;
 
     /**
      *
-     * удаление клиента
+     * @param client
+     * @return
+     * @throws SQLException
+     * delete client
      */
     boolean deleteClient(Client client) throws SQLException;
 
-    void addClientAccount(Client client, Account account) throws SQLException;
 
 
 

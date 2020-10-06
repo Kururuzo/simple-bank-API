@@ -9,7 +9,6 @@ public enum SqlScripts {
     /**
      * Выбор всех счетов клиента
      */
-    SELECT_ALL_ACCOUNTS("dataBase/sql/query/AccountSelectAll.sql"),
 
     ADD_CLIENT("dataBase/sql/query/AddClient.sql"),
 
@@ -21,13 +20,15 @@ public enum SqlScripts {
 
     DELETE_CLIENT("dataBase/sql/query/DeleteClient.sql"),
 
-    ADD_CLIENT_ACCOUNT("dataBase/sql/query/AddClientAccount.sql"),
-
     GET_ALL_CLIENT_ACCOUNTS("dataBase/sql/query/GetAllClientIAccounts.sql"),
 
     GET_ACCOUNT_BY_CLIENT_ID("dataBase/sql/query/GetAccountByClientId.sql"),
 
-    ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql");
+    ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql"),
+
+    UPDATE_ACCOUNT("dataBase/sql/query/UpdateAccount.sql"),
+
+    DELETE_ACCOUNT("dataBase/sql/query/DeleteAccount.sql");
 
     private final String path;
 

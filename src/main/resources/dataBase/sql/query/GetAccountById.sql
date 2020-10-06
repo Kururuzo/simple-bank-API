@@ -1,0 +1,1 @@
+select clients_id, number, amount, currency from accounts where id = ?
