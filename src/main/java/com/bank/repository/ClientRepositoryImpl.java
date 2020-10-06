@@ -79,8 +79,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     public Client getClientById(Integer id) throws SQLException {
 //        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.GET_CLIENT_BY_ID.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -102,9 +103,10 @@ public class ClientRepositoryImpl implements ClientRepository {
         String sql = resourceReader.getSQL(SqlScripts.SELECT_ALL_CLIENTS.getPath());
 
         try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet resultSet = ps.executeQuery();) {
 
-            ResultSet resultSet = ps.executeQuery();
+//            ResultSet resultSet = ps.executeQuery();
 
             List<Client> clientList = new ArrayList<>();
             while (resultSet.next()) {
@@ -127,8 +129,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     public void addClient(Client client) throws SQLException {
 //        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.ADD_CLIENT.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try ( Connection connection = getConnection();
+              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, client.getName());
             ps.setString(2, client.getEmail());
             ps.execute();
@@ -140,8 +143,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     public void updateClient(Client client) throws SQLException {
 //        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.ADD_CLIENT.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try ( Connection connection = getConnection();
+              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, client.getName());
             stmt.setString(2, client.getEmail());
             stmt.execute();
@@ -152,8 +156,9 @@ public class ClientRepositoryImpl implements ClientRepository {
     public boolean deleteClient(Client client) throws SQLException {
 //        ResourceReader resourceReader = new ResourceReader().get();
         String sql = resourceReader.getSQL(SqlScripts.DELETE_CLIENT.getPath());
-        Connection connection = getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (Connection connection = getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, client.getId());
             int rows = stmt.executeUpdate();
             if (rows != 0) return true;
