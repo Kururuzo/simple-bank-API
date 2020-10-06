@@ -1,0 +1,1 @@
+update CLIENTS set NAME = ?, EMAIL = ?  where id = ?

@@ -3,14 +3,17 @@ package com.bank.repository;
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
 public interface AccountRepository {
-    Double checkBalanceByAccountNumber(String accountNumber) throws SQLException;
-    Double checkBalanceByAccountId(Integer accountId) throws SQLException;
 
-    boolean depositFunds(String accountNumber, Double amount) throws SQLException;
+
+    BigDecimal checkBalanceByAccountNumber(String accountNumber) throws SQLException;
+    BigDecimal checkBalanceByAccountId(Integer accountId) throws SQLException;
+
+    boolean depositFunds(String accountNumber, BigDecimal amount) throws SQLException;
 
     List<Account> getAccountListByClientId (Integer clientId) throws SQLException;
 
