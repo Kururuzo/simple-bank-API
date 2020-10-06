@@ -1,0 +1,1 @@
+select ID, NAME, EMAIL, REGISTERED from CLIENTS where ID = ?

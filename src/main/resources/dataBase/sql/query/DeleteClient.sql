@@ -1,0 +1,1 @@
+delete from CLIENTS where ID = ?

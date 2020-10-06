@@ -4,11 +4,13 @@ import com.bank.model.Account;
 import com.bank.model.CreditCard;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountRepositoryJDBC implements AccountRepository {
+
+public class AccountRepositoryImpl implements AccountRepository {
     public static final String SQL_GET_AMOUNT_BY_ACCOUNT_NUMBER = "SELECT amount FROM accounts WHERE number = ?";
     public static final String SQL_GET_AMOUNT_BY_ACCOUNT_ID = "SELECT amount FROM accounts WHERE id = ?";
     private static final String SQL_UPDATE_AMOUNT = "UPDATE accounts SET amount = ? WHERE number = ?";
@@ -20,19 +22,19 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     DataSource dataSource;
 
-    public AccountRepositoryJDBC(DataSource dataSource) {
+    public AccountRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public Double checkBalanceByAccountNumber(String accountNumber) throws SQLException {
+    public BigDecimal checkBalanceByAccountNumber(String accountNumber) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement ps = conn.prepareStatement(SQL_GET_AMOUNT_BY_ACCOUNT_NUMBER);
         ps.setString(1, accountNumber);
         ResultSet resultSet = ps.executeQuery();
-        Double amount = null;
+        BigDecimal amount = null;
         if (resultSet.next()) {
-            amount = resultSet.getDouble("amount");
+            amount = resultSet.getBigDecimal("amount");
         }
         resultSet.close();
         ps.close();
@@ -42,18 +44,20 @@ public class AccountRepositoryJDBC implements AccountRepository {
         } else {
             return amount;
         }
+
     }
 
 
+
     @Override
-    public Double checkBalanceByAccountId(Integer accountId) throws SQLException {
+    public BigDecimal checkBalanceByAccountId(Integer accountId) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement ps = conn.prepareStatement(SQL_GET_AMOUNT_BY_ACCOUNT_ID);
         ps.setInt(1, accountId);
         ResultSet resultSet = ps.executeQuery();
-        Double amount = null;
+        BigDecimal amount = null;
         if (resultSet.next()) {
-            amount = resultSet.getDouble("amount");
+            amount = resultSet.getBigDecimal("amount");
         }
         resultSet.close();
         ps.close();
@@ -66,11 +70,11 @@ public class AccountRepositoryJDBC implements AccountRepository {
     }
 
     @Override
-    public boolean depositFunds(String accountNumber, Double amount) throws SQLException {
-        Double balance = checkBalanceByAccountNumber(accountNumber);
+    public boolean depositFunds(String accountNumber, BigDecimal amount) throws SQLException {
+        BigDecimal balance = checkBalanceByAccountNumber(accountNumber);
         Connection conn = getConnection();
         PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_AMOUNT);
-        ps.setDouble(1, balance + amount);
+        ps.setBigDecimal(1, balance.add(amount));
         ps.setString(2, accountNumber);
         int res = ps.executeUpdate();
         ps.close();
@@ -91,7 +95,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
             account = new Account();
             account.setId(resultSet.getInt("id"));
             account.setNumber(resultSet.getString("number"));
-            account.setAmount(resultSet.getDouble("amount"));
+            account.setAmount(resultSet.getBigDecimal("amount"));
             account.setCurrency(resultSet.getString("currency"));
             accountList.add(account);
         }

@@ -4,11 +4,12 @@ import com.bank.model.Account;
 import com.bank.model.Client;
 import com.bank.model.CreditCard;
 import com.bank.repository.AccountRepository;
-import com.bank.repository.AccountRepositoryJDBC;
+import com.bank.repository.AccountRepositoryImpl;
 import com.bank.repository.ClientRepository;
-import com.bank.repository.ClientRepositoryJDBC;
+import com.bank.repository.ClientRepositoryImpl;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,12 @@ public class AccountService {
     private final ClientRepository clientRepository;
 
     public AccountService(DataSource dataSource) {
-        this.repository = new AccountRepositoryJDBC(dataSource);
-        this.clientRepository = new ClientRepositoryJDBC(dataSource);
+        this.repository = new AccountRepositoryImpl(dataSource);
+        this.clientRepository = new ClientRepositoryImpl(dataSource);
     }
 
     //    Проверка баланса
-    public Double checkBalance(Account account) {
+    public BigDecimal checkBalance(Account account) {
         try {
             return repository.checkBalanceByAccountId(account.getId());
         } catch (SQLException e) {
@@ -34,7 +35,7 @@ public class AccountService {
         return null;
     }
 
-    public void depositeFunds(Account account, Double amount) {
+    public void depositeFunds(Account account, BigDecimal amount) {
         try {
             boolean success = repository.depositFunds(account.getNumber(), amount);
             if (!success) {
@@ -71,32 +72,32 @@ public class AccountService {
         return null;
     }
 
-    public CreditCard creditCardIssue(Account account) {
-        try {
-            String newCardNumber;
-            do {
-                newCardNumber = getCardNumber();
-            } while (repository.isCardNumberExists(newCardNumber));
-
-            List<CreditCard> oldCardList = repository.getCreditCardListByAccountId(account.getId());
-            repository.addCreditCard(account.getId(), newCardNumber);
-            List<CreditCard> newCardList = repository.getCreditCardListByAccountId(account.getId());
-            newCardList.removeAll(oldCardList);
-
-            if (newCardList.size() != 1) {
-                throw new SQLException("Exception! Too many cards added!");
-            }
-
-            CreditCard card = newCardList.get(0);
-            card.setAccount(account);
-            card.setClient(clientRepository.getByAccountId(account.getId()));
-
-            return card;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public CreditCard creditCardIssue(Account account) {
+//        try {
+//            String newCardNumber;
+//            do {
+//                newCardNumber = getCardNumber();
+//            } while (repository.isCardNumberExists(newCardNumber));
+//
+//            List<CreditCard> oldCardList = repository.getCreditCardListByAccountId(account.getId());
+//            repository.addCreditCard(account.getId(), newCardNumber);
+//            List<CreditCard> newCardList = repository.getCreditCardListByAccountId(account.getId());
+//            newCardList.removeAll(oldCardList);
+//
+//            if (newCardList.size() != 1) {
+//                throw new SQLException("Exception! Too many cards added!");
+//            }
+//
+//            CreditCard card = newCardList.get(0);
+//            card.setAccount(account);
+//            card.setClient(clientRepository.getByAccountId(account.getId()));
+//
+//            return card;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
 
     private String getCardNumber() {

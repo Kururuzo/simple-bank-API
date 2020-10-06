@@ -10,7 +10,7 @@ public class CreditCardTestData {
 
 
     public static CreditCard CARD_1 =
-            new CreditCard(100004, AccountTestData.ACCOUNT_1, "9991111111", ClientTestData.CLIENT_1);
+            new CreditCard(100004, AccountTestData.ACCOUNT_1, "9991111111", null, ClientTestData.CLIENT_1);
 
     public static final Comparator<CreditCard> creditCardComparator = new Comparator<CreditCard>() {
         @Override
