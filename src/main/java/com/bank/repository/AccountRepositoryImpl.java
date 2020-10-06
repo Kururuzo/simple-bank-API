@@ -51,7 +51,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             ResultSet rs = stmt.executeQuery();
             Account account = null;
             while (rs.next()) {
-                 account = Account.builder()
+                account = Account.builder()
                         .id(rs.getInt("id"))
                         .number(rs.getString("number"))
                         .amount(rs.getBigDecimal("amount"))

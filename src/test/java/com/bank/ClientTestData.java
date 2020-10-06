@@ -2,6 +2,7 @@ package com.bank;
 
 import com.bank.model.Account;
 import com.bank.model.Client;
+import com.bank.model.to.ClientTo;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -12,6 +13,9 @@ import java.util.List;
 public class ClientTestData {
     public static final TestMatcher<Client> CLIENTS_MATCHER =
             TestMatcher.usingFieldsComparator(Client.class,  "registered", "accounts");
+
+    public static final TestMatcher<ClientTo> CLIENTS_TO_MATCHER =
+            TestMatcher.usingFieldsComparator(ClientTo.class,  "id", "registered", "accounts");
 
     public static final int CLIENT_1_ID = 100000;
     public static final int CLIENT_2_ID = 100001;

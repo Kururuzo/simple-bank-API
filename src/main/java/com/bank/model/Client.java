@@ -11,6 +11,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 public class Client{
+
     private Integer id;
     private String name;
     private String email;
