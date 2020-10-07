@@ -1,5 +1,6 @@
 package com.bank.repository;
 
+import com.bank.ClientTestData;
 import com.bank.model.Account;
 import com.bank.model.Client;
 import org.h2.tools.RunScript;
@@ -12,9 +13,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bank.AccountTestData.*;
+import static com.bank.ClientTestData.*;
 
 public class AccountRepositoryImplTest {
 
@@ -23,13 +26,13 @@ public class AccountRepositoryImplTest {
 
     @BeforeClass
     public static void setup() {
-        repository = new AccountRepositoryImpl(Utils.getDataSource());
+        repository = new AccountRepositoryImpl();
         clientRepository = new ClientRepositoryImpl();
     }
 
     @Before
     public void setUp() {
-        try (Connection connection = Utils.getConnection()){
+        try (Connection connection = Utils.getConnection()) {
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2init.SQL"));
             RunScript.execute(connection, new FileReader("src/main/resources/dataBase/H2populate.SQL"));
         } catch (FileNotFoundException | SQLException e) {
@@ -38,94 +41,70 @@ public class AccountRepositoryImplTest {
     }
 
     @Test
-    public void addAccount(){
-        try {
-            Client client = Client.builder().id(100_006).name("Ivan").email("test@mail.ru").build();
-            Account account =Account.builder()
-                    .id(100003)
-                    .client(client)
+    public void addAccount() throws SQLException {
+            Account account = Account.builder()
+                    .client(ClientTestData.CLIENT_1)
                     .number("40817810500550987654")
                     .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
                     .currency("RUB")
                     .build();
-            repository.addAccount(client, account);
-            Account account1 = repository.getAccountById(100003);
-            Assert.assertEquals(account,account1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+
+            List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
+            repository.addAccount(CLIENT_1, account);
+            List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1);
+            newAccounts.removeAll(oldAccounts);
+            Assert.assertEquals(1, newAccounts.size());
+
+            Account newAccount = newAccounts.get(0);
+            newAccount.setId(null);
+            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, newAccount);
     }
 
     @Test
-    public void getAllAccounts(){
-        try {
-            Client client = Client.builder().id(100006).name("Den").email("den@mail.ru").build();
-            clientRepository.addClient(client);
-            Account account = Account.builder()
-                    .id(100007)
-                    .number("111111")
-                    .currency("RUB")
-                    .amount(new BigDecimal(1000).setScale(2))
-                    .client(client)
-                    .build();
-            Account account1 = Account.builder()
-                    .id(100008)
-                    .number("222222")
-                    .currency("RUB")
-                    .amount(new BigDecimal(2000))
-                    .client(client)
-                    .build();
-            repository.addAccount(client, account);
-            repository.addAccount(client, account1);
-            List<Account> allClientAccounts = repository.getAllClientAccounts(client);
-            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(allClientAccounts, account,account1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
+    public void getAllAccounts() throws SQLException {
+            List<Account> client1Accs = repository.getAllClientAccounts(CLIENT_1);
+            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(client1Accs, Arrays.asList(ACCOUNT_1));
     }
 
     @Test
-    public void  getAccById(){
-        try {
+    public void getAccById() throws SQLException {
             Account account = repository.getAccountById(100002);
             ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, ACCOUNT_1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     @Test
-    public void updateAccount() {
-
-        try {
+    public void updateAccount() throws SQLException {
             Account account = ACCOUNT_1;
             account.setAmount(new BigDecimal(121212).setScale(2));
             repository.updateAccount(account);
             Account account1 = repository.getAccountById(ACCOUNT_1.getId());
-            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account,account1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(account, account1);
     }
 
     @Test
-    public void deleteAccount(){
-        try{
-            Client client = Client.builder().id(100006).name("Vlad").email("mqil@mail.ru").build();
-            clientRepository.addClient(client);
-            Account account = Account.builder().id(100003).number("123456").currency("RUB").amount(new BigDecimal(12).setScale(2)).build();
-            Account account1 = Account.builder().id(100004).number("098765").currency("RUB").amount(new BigDecimal(1212).setScale(2)).build();
-            repository.addAccount(client, account);
-            repository.addAccount(client, account1);
-            List<Account> accountList = repository.getAllClientAccounts(client);
-            repository.deletAccount(account);
-            List<Account> accountList1 = repository.getAllClientAccounts(client);
-            ACCOUNT_MATCHER_WITHOUT_CLIENT.assertMatch(accountList,accountList1);
+    public void deleteAccount() throws SQLException {
+        Account account = Account.builder()
+                .client(ClientTestData.CLIENT_1)
+                .number("40817810500550987654")
+                .amount(new BigDecimal(1000).setScale(2, BigDecimal.ROUND_CEILING))
+                .currency("RUB")
+                .build();
+        repository.addAccount(CLIENT_1, account);
+        List<Account> oldAccounts = repository.getAllClientAccounts(CLIENT_1);
+        Assert.assertEquals(2, oldAccounts.size());
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        repository.deletAccount(ACCOUNT_1);
+        List<Account> newAccounts = repository.getAllClientAccounts(CLIENT_1);
+        oldAccounts.removeAll(newAccounts);
+        Assert.assertEquals(1, oldAccounts.size());
+
+    }
+
+    @Test(expected = SQLException.class)
+    public void getEmptyAccountListException() throws SQLException {
+        repository.deletAccount(ACCOUNT_1);
+        repository.getAllClientAccounts(CLIENT_1);
+
     }
 
     //    @Test

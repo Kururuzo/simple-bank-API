@@ -10,20 +10,16 @@ public interface AccountRepository {
 
 
     /**
-     *
      * @param client
      * @param account
-     * @throws SQLException
-     * add account
+     * @throws SQLException add account
      */
     void addAccount(Client client, Account account) throws SQLException;
 
     /**
-     *
      * @param client
      * @return
-     * @throws SQLException
-     * find all client's accounts
+     * @throws SQLException find all client's accounts
      */
     List<Account> getAllClientAccounts(Client client) throws SQLException;
 
@@ -37,10 +33,8 @@ public interface AccountRepository {
 //    Account getAccountById(Account account) throws SQLException;
 
     /**
-     *
      * @return
-     * @throws SQLException
-     * find account by id
+     * @throws SQLException find account by id
      */
     Account getAccountById(int id) throws SQLException;
 
@@ -54,23 +48,15 @@ public interface AccountRepository {
 //    Account getAccountById(Client client) throws SQLException;
 
     /**
-     *
-     * @param account
-     * update account
+     * @param account update account
      */
     void updateAccount(Account account);
 
     /**
-     *
      * @param account
-     * @return
-     * delete account
+     * @return delete account
      */
     boolean deletAccount(Account account);
-
-
-
-
 
 
 //    BigDecimal checkBalanceByAccountNumber(String accountNumber) throws SQLException;

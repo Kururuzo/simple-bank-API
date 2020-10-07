@@ -1,18 +1,11 @@
 package com.bank.service;
 
-import com.bank.model.Account;
-import com.bank.model.Client;
-import com.bank.model.CreditCard;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.AccountRepositoryImpl;
 import com.bank.repository.ClientRepository;
 import com.bank.repository.ClientRepositoryImpl;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class AccountService {
@@ -21,7 +14,7 @@ public class AccountService {
     private final ClientRepository clientRepository;
 
     public AccountService(DataSource dataSource) {
-        this.repository = new AccountRepositoryImpl(dataSource);
+        this.repository = new AccountRepositoryImpl();
         this.clientRepository = new ClientRepositoryImpl();
     }
 

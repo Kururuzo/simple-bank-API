@@ -3,25 +3,21 @@ package com.bank.repository;
 import com.bank.model.Account;
 import com.bank.model.Client;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bank.repository.Utils.getConnection;
+import static com.bank.repository.Utils.getSQLPath;
+
 public class AccountRepositoryImpl implements AccountRepository {
-
-    private DataSource dataSource;
-    private ResourceReader resourceReader = new ResourceReader();
-
-    public AccountRepositoryImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     @Override
     public void addAccount(Client client, Account account) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.ADD_ACCOUNT.getPath());
+        String sql = getSQLPath(SqlScripts.ADD_ACCOUNT.getPath());
 
-        try(Connection connection = getConnection();PreparedStatement ps = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, client.getId());
             ps.setString(2, account.getNumber());
             ps.setBigDecimal(3, account.getAmount());
@@ -32,9 +28,10 @@ public class AccountRepositoryImpl implements AccountRepository {
 
 //    @Override
 //    public Account getAccountById(Client client) throws SQLException {
-//        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
+//        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
 //
-//        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+//        try (Connection connection = getConnection();
+//        PreparedStatement stmt = connection.prepareStatement(sql)) {
 //            stmt.setInt(1, client.getId());
 //            ResultSet rs = stmt.executeQuery();
 //            Account account = null;
@@ -56,10 +53,11 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account getAccountById(int id) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_ID.getPath());
+        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_ID.getPath());
 
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1,id);
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Account account = Account.builder()
@@ -76,7 +74,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
 //    @Override
 //    public Account getAccountById(Account account) throws SQLException {
-//        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
+//        String sql = getSQLPath(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
 //
 //        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 //            stmt.setInt(1, account.getId());
@@ -99,7 +97,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public List<Account> getAllClientAccounts(Client client) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
+        String sql = getSQLPath(SqlScripts.GET_ALL_CLIENT_ACCOUNTS.getPath());
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, client.getId());
             ResultSet rs = stmt.executeQuery();
@@ -123,9 +121,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateAccount( Account account) {
-        String sql = resourceReader.getSQL(SqlScripts.UPDATE_ACCOUNT.getPath());
-        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+    public void updateAccount(Account account) {
+        String sql = getSQLPath(SqlScripts.UPDATE_ACCOUNT.getPath());
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, account.getId());
             stmt.setBigDecimal(2, account.getAmount());
             stmt.execute();
@@ -136,19 +134,14 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public boolean deletAccount(Account account) {
-        String sql = resourceReader.getSQL(SqlScripts.DELETE_ACCOUNT.getPath());
-        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql = getSQLPath(SqlScripts.DELETE_ACCOUNT.getPath());
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, account.getId());
             int rows = stmt.executeUpdate();
-            if (rows != 0)return true;
+            if (rows != 0) return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return false;
     }
-
-    private Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
-
 }

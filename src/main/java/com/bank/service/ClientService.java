@@ -3,7 +3,6 @@ package com.bank.service;
 import com.bank.model.Client;
 import com.bank.repository.ClientRepository;
 import com.bank.repository.ClientRepositoryImpl;
-import com.bank.repository.Utils;
 
 import java.sql.SQLException;
 import java.util.List;

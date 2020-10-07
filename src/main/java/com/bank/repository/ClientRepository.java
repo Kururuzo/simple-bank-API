@@ -1,6 +1,5 @@
 package com.bank.repository;
 
-import com.bank.model.Account;
 import com.bank.model.Client;
 
 import java.sql.SQLException;
@@ -43,7 +42,7 @@ public interface ClientRepository {
      */
     boolean deleteClient(Integer id) throws SQLException;
 
-    void addClientAccount(Client client, Account account) throws SQLException;
+//    void addClientAccount(Client client, Account account) throws SQLException;
 
 
 //    Client getById (int clientId) throws SQLException;

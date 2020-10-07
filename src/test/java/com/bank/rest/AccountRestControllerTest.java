@@ -8,7 +8,6 @@ import org.junit.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,18 +23,8 @@ public class AccountRestControllerTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        // start the server
-//        server = Main.startServer();
         server = Utils.startServer();
-        // create the client
         Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-         //c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
         target = c.target(Utils.BASE_URI);
     }
 
@@ -60,18 +49,4 @@ public class AccountRestControllerTest {
             assertEquals("Account got it!", responseMsg);
     }
 
-    @Test
-    public void get_account() {
-//        Response response = target.path("/account/1").request().get();
-
-//        assertEquals("should return status 200", 200, response.getStatus());
-//        assertNotNull("Should return user list", response.getEntity().toString());
-    }
-
-    @Test
-    public void getBalance() {
-
-//        assertNotNull(account);
-//        assertEquals("100.0000", account.getBalance().toString());
-    }
 }

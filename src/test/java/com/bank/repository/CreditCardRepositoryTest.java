@@ -5,14 +5,12 @@ import com.bank.CreditCardTestData;
 import com.bank.model.Account;
 import com.bank.model.CreditCard;
 import org.h2.tools.RunScript;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +21,7 @@ public class CreditCardRepositoryTest {
 
     @BeforeClass
     public static void setup() {
-        creditCardRepository = new CreditCadrRepositoruImpl(Utils.getDataSource());
+        creditCardRepository = new CreditCardRepositoryImpl();
     }
 
     @Before
@@ -37,27 +35,19 @@ public class CreditCardRepositoryTest {
     }
 
     @Test
-    public void addCard() {
-        try{
+    public void addCard() throws SQLException {
             Account account = AccountTestData.ACCOUNT_1;
             CreditCard card = CreditCard.builder().id(100006).number("123").registered(null).account(account).build();
             creditCardRepository.addCard(account, card);
             List<CreditCard> allCards = creditCardRepository.getAllCards(account);
             CreditCardTestData.CARD_MATCHER.assertMatch(allCards, CreditCardTestData.CARD_1, card);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     @Test
-    public void getAllCards() {
-        try{
+    public void getAllCards() throws SQLException {
 //            creditCardRepository.addCard(AccountTestData.ACCOUNT_1, CreditCardTestData.CARD_1);
             List<CreditCard> creditCards = creditCardRepository.getAllCards(AccountTestData.ACCOUNT_1);
             CreditCardTestData.CARD_MATCHER.assertMatch(creditCards, CreditCardTestData.CARD_1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     @Test

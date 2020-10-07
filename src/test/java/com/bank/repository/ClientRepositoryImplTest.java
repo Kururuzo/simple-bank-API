@@ -53,30 +53,22 @@ public class ClientRepositoryImplTest {
 //    }
 
     @Test
-    public void getClientById() {
+    public void getClientById() throws SQLException {
         Client client;
-        try {
-            client = clientRepository.getClientById(CLIENT_1_ID);
-            CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        client = clientRepository.getClientById(CLIENT_1_ID);
+        CLIENTS_MATCHER.assertMatch(client, CLIENT_1);
     }
 
     @Test
-    public void addNewClient() {
-        try {
-            Client newClient = Client.builder()
-                    .name(CLIENT_3.getName())
-                    .email(CLIENT_3.getEmail())
-                    .build();
-            clientRepository.save(newClient);
-            Client client1 = clientRepository.getClientById(CLIENT_3.getId());
-            CLIENTS_MATCHER.assertMatch(newClient, client1);
+    public void addNewClient() throws SQLException {
+        Client newClient = Client.builder()
+                .name(CLIENT_3.getName())
+                .email(CLIENT_3.getEmail())
+                .build();
+        clientRepository.save(newClient);
+        Client client1 = clientRepository.getClientById(CLIENT_3.getId());
+        CLIENTS_MATCHER.assertMatch(newClient, client1);
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
 //    @Test
@@ -97,35 +89,25 @@ public class ClientRepositoryImplTest {
 //    }
 
     @Test
-    public void deleteClient() {
-        try {
-            Client client = Client.builder()
-                    .name("update name")
-                    .email("update@mail.ru")
-                    .build();
-            clientRepository.save(client);
-            Client client1 = clientRepository.getClientById(100006);
-            clientRepository.deleteClient(100006);
-            List<Client> clients = clientRepository.getAll();
-            CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
+    public void deleteClient() throws SQLException {
+        Client client = Client.builder()
+                .name("update name")
+                .email("update@mail.ru")
+                .build();
+        clientRepository.save(client);
+        Client client1 = clientRepository.getClientById(100006);
+        clientRepository.deleteClient(100006);
+        List<Client> clients = clientRepository.getAll();
+        CLIENTS_MATCHER.assertMatch(clients, CLIENT_1, CLIENT_2);
     }
 
     @Test
-    public void getAllClients() {
-        try {
-            List<Client> allClients = clientRepository.getAll();
-            Collections.sort(allClients, clientComparator);
-            Assert.assertEquals(allClients.size(), 2);
-            CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void getAllClients() throws SQLException {
+        List<Client> allClients = clientRepository.getAll();
+        Collections.sort(allClients, clientComparator);
+        Assert.assertEquals(allClients.size(), 2);
+        CLIENTS_MATCHER.assertMatch(allClients, CLIENTS);
     }
-
 
 
 //

@@ -1,9 +1,7 @@
 package com.bank.repository;
 
-import com.bank.model.Account;
 import com.bank.model.Client;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +10,8 @@ import static com.bank.repository.Utils.*;
 
 public class ClientRepositoryImpl implements ClientRepository {
 
-    private static final String SQL_GET_CLIENT_BY_ACCOUNT_ID = "SELECT * FROM clients WHERE id = " +
-            "(SELECT clients_id FROM accounts WHERE id = ?)";
+//    private static final String SQL_GET_CLIENT_BY_ACCOUNT_ID = "SELECT * FROM clients WHERE id = " +
+//            "(SELECT clients_id FROM accounts WHERE id = ?)";
 
     @Override
     public Client getClientById(Integer id) throws SQLException {
@@ -106,19 +104,19 @@ public class ClientRepositoryImpl implements ClientRepository {
         return success > 0;
     }
 
-    @Override
-    public void addClientAccount(Client client, Account account) throws SQLException {
-        String sql = getSQLPath(SqlScripts.ADD_CLIENT_ACCOUNT.getPath());
-        try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, account.getId());
-            ps.setInt(2, client.getId());
-            ps.setString(3, account.getNumber());
-            ps.setBigDecimal(4, account.getAmount());
-            ps.setString(5, account.getCurrency());
-            ps.execute();
-        }
-    }
+//    @Override
+//    public void addClientAccount(Client client, Account account) throws SQLException {
+//        String sql = getSQLPath(SqlScripts.ADD_CLIENT_ACCOUNT.getPath());
+//        try (Connection connection = getConnection();
+//             PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setInt(1, account.getId());
+//            ps.setInt(2, client.getId());
+//            ps.setString(3, account.getNumber());
+//            ps.setBigDecimal(4, account.getAmount());
+//            ps.setString(5, account.getCurrency());
+//            ps.execute();
+//        }
+//    }
 
 //    @Override
 //    public Client getByAccountId(int accountId) throws SQLException {
