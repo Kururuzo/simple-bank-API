@@ -9,7 +9,6 @@ public enum SqlScripts {
     /**
      * Выбор всех счетов клиента
      */
-    SELECT_ALL_ACCOUNTS("dataBase/sql/query/AccountSelectAll.sql"),
 
     SAVE_CLIENT("dataBase/sql/query/SaveClient.sql"),
 
@@ -21,13 +20,25 @@ public enum SqlScripts {
 
     DELETE_CLIENT("dataBase/sql/query/DeleteClient.sql"),
 
-    ADD_CLIENT_ACCOUNT("dataBase/sql/query/AddClientAccount.sql"),
-
     GET_ALL_CLIENT_ACCOUNTS("dataBase/sql/query/GetAllClientIAccounts.sql"),
 
-    GET_ACCOUNT_BY_CLIENT_ID("dataBase/sql/query/GetAccountByClientId.sql"),
+    GET_ACCOUNT_BY_ID("dataBase/sql/query/GetAccountById.sql"),
 
-    ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql");
+    ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql"),
+
+    UPDATE_ACCOUNT("dataBase/sql/query/UpdateAccount.sql"),
+
+    DELETE_ACCOUNT("dataBase/sql/query/DeleteAccount.sql"),
+
+    ADD_CARD("dataBase/sql/query/AddCard.sql"),
+
+    FIND_ALL_CARDS_BY_ACCOUNT_ID("dataBase/sql/query/GetAllCards.sql"),
+
+    FIND_CARD_BY_ID("dataBase/sql/query/GetCardById.sql"),
+
+    UPDATE_CARD("dataBase/sql/query/UpdateCard.sql"),
+
+    DELETE_CARD("dataBase/sql/query/DeleteCard.sql");
 
     private final String path;
 

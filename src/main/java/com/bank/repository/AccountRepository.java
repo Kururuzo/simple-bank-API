@@ -2,21 +2,73 @@ package com.bank.repository;
 
 import com.bank.model.Account;
 import com.bank.model.Client;
-import com.bank.model.CreditCard;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
 public interface AccountRepository {
 
+
+    /**
+     *
+     * @param client
+     * @param account
+     * @throws SQLException
+     * add account
+     */
     void addAccount(Client client, Account account) throws SQLException;
 
+    /**
+     *
+     * @param client
+     * @return
+     * @throws SQLException
+     * find all client's accounts
+     */
     List<Account> getAllClientAccounts(Client client) throws SQLException;
 
-    Account getAccountByClientId(Client client) throws SQLException;
+//    /**
+//     *
+//     * @param account
+//     * @return
+//     * @throws SQLException
+//     * find account by id
+//     */
+//    Account getAccountById(Account account) throws SQLException;
 
-    void updateAccount(Client client, Account account);
+    /**
+     *
+     * @return
+     * @throws SQLException
+     * find account by id
+     */
+    Account getAccountById(int id) throws SQLException;
+
+//    /**
+//     *
+//     * @param client
+//     * @return
+//     * @throws SQLException
+//     * find client's account
+//     */
+//    Account getAccountById(Client client) throws SQLException;
+
+    /**
+     *
+     * @param account
+     * update account
+     */
+    void updateAccount(Account account);
+
+    /**
+     *
+     * @param account
+     * @return
+     * delete account
+     */
+    boolean deletAccount(Account account);
+
+
 
 
 
