@@ -113,6 +113,16 @@ public class ClientRepositoryImplTest {
         }
     }
 
+//    @Test
+//    public void findCardByClientIdAndAccountId(){
+//        try {
+//            Client cardByClientId = clientRepository.getCardByClientId(100000, 100002, 100004);
+//            System.out.println(cardByClientId);
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//    }
+
 
 
 //

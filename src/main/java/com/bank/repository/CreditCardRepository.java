@@ -30,7 +30,7 @@ public interface CreditCardRepository {
      * @return
      * find cadr by id
      */
-    CreditCard getCardById(CreditCard card) throws SQLException;
+    CreditCard getCardById(int id) throws SQLException;
 
     /**
      *

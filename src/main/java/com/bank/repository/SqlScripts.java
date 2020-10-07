@@ -38,7 +38,9 @@ public enum SqlScripts {
 
     UPDATE_CARD("dataBase/sql/query/UpdateCard.sql"),
 
-    DELETE_CARD("dataBase/sql/query/DeleteCard.sql");
+    DELETE_CARD("dataBase/sql/query/DeleteCard.sql"),
+
+    FIND_CARD_NUM_BY_CLIENT_ID_ANR_ACCOUNT_IF("dataBase/sql/query/GetCardByClientIDAndAccountId.sql");
 
     private final String path;
 

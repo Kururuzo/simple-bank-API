@@ -60,12 +60,28 @@ public class CreditCardRepositoryTest {
         }
     }
 
+
     @Test
     public void getCardById() {
+        try {
+            CreditCard card = creditCardRepository.getCardById(100004);
+            CreditCardTestData.CARD_MATCHER.assertMatch(CreditCardTestData.CARD_1, card);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Test
     public void updateCard() {
+        try {
+            CreditCard card = CreditCardTestData.CARD_1;
+            card.setNumber("123456");
+            creditCardRepository.updateCard(card);
+            CreditCard card1 = creditCardRepository.getCardById(card.getId());
+            CreditCardTestData.CARD_MATCHER.assertMatch(card, card1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Test

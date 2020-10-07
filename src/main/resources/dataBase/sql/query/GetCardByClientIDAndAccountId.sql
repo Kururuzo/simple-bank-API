@@ -1,0 +1,1 @@
+select client.name, card.number from clients as client left join accounts as acc on (client.id = acc.clients_id) left join credit_cards as card on (card.account_id = acc.id) where (client.id = ? , acc.id = ?, card.id = ?)

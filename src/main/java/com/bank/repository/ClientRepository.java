@@ -2,6 +2,7 @@ package com.bank.repository;
 
 import com.bank.model.Account;
 import com.bank.model.Client;
+import com.bank.model.CreditCard;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -50,6 +51,8 @@ public interface ClientRepository {
      * delete client
      */
     boolean deleteClient(Client client) throws SQLException;
+
+//    Client getCardByClientId(int clientId, int accountId,int cardId) throws SQLException;
 
 
 

@@ -52,13 +52,13 @@ public class CreditCadrRepositoruImpl implements CreditCardRepository {
     }
 
     @Override
-    public CreditCard getCardById(CreditCard card) throws SQLException {
+    public CreditCard getCardById(int id) throws SQLException {
         String sql = resourceReader.getSQL(SqlScripts.FIND_CARD_BY_ID.getPath());
         try(Connection connection = getConnection(); PreparedStatement stmp = connection.prepareStatement(sql)) {
-            stmp.setInt(1, card.getId());
+            stmp.setInt(1, id);
             ResultSet rs = stmp.executeQuery();
             if (rs.next()){
-                CreditCard card1 = CreditCard.builder()
+                CreditCard card = CreditCard.builder()
                         .id(rs.getInt("id"))
                         .number(rs.getString("number"))
                         .registered(rs.getDate("registered"))

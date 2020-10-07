@@ -17,6 +17,8 @@ public class Client{
     private Date registered = new Date();
     private List<Account> accounts;
 
-
+    private String cardNum;
+    private String accountAmount;
+    private List<CreditCard> cards;
 
 }
