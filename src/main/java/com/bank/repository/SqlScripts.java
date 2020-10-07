@@ -22,7 +22,7 @@ public enum SqlScripts {
 
     GET_ALL_CLIENT_ACCOUNTS("dataBase/sql/query/GetAllClientIAccounts.sql"),
 
-    GET_ACCOUNT_BY_CLIENT_ID("dataBase/sql/query/GetAccountByClientId.sql"),
+    GET_ACCOUNT_BY_ID("dataBase/sql/query/GetAccountById.sql"),
 
     ADD_ACCOUNT("dataBase/sql/query/AddAccount.sql"),
 

@@ -34,6 +34,7 @@ public class CreditCadrRepositoruImpl implements CreditCardRepository {
     public List<CreditCard> getAllCards(Account account) throws SQLException {
         String sql = resourceReader.getSQL(SqlScripts.FIND_ALL_CARDS_BY_ACCOUNT_ID.getPath());
         try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, account.getId());
             ResultSet rs = stmt.executeQuery();
             List<CreditCard> creditCards = new ArrayList<>();
             while (rs.next()){

@@ -1,1 +1,1 @@
-select id, number, amount, currency from accounts where clients_id = ?
+select id, number, amount, currency from accounts where id = ?

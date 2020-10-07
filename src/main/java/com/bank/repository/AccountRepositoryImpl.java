@@ -30,52 +30,72 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
+//    @Override
+//    public Account getAccountById(Client client) throws SQLException {
+//        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
+//
+//        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+//            stmt.setInt(1, client.getId());
+//            ResultSet rs = stmt.executeQuery();
+//            Account account = null;
+//            while (rs.next()) {
+//                 account = Account.builder()
+//                        .id(rs.getInt("id"))
+//                        .number(rs.getString("number"))
+//                        .amount(rs.getBigDecimal("amount"))
+//                        .currency(rs.getString("currency"))
+//                        .build();
+//            }
+//            if(account != null){
+//                return account;
+//            }else {
+//                throw new SQLException("Not found any account!");
+//            }
+//        }
+//    }
+
     @Override
-    public Account getAccountByClientId(Client client) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
+    public Account getAccountById(int id) throws SQLException {
+        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_ID.getPath());
 
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, client.getId());
+            stmt.setInt(1,id);
             ResultSet rs = stmt.executeQuery();
-            Account account = null;
-            while (rs.next()) {
-                 account = Account.builder()
-                        .id(rs.getInt("id"))
+            if (rs.next()) {
+                Account account = Account.builder()
+                        .id(rs.getInt(1))
                         .number(rs.getString("number"))
                         .amount(rs.getBigDecimal("amount"))
                         .currency(rs.getString("currency"))
                         .build();
-            }
-            if(account != null){
                 return account;
-            }else {
-                throw new SQLException("Not found any account!");
             }
         }
+        return Account.builder().id(-1).build();
     }
 
-    @Override
-    public Account getAccountById(Account account) throws SQLException {
-        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
-
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, account.getId());
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                account = Account.builder()
-                        .id(rs.getInt("id"))
-                        .number(rs.getString("number"))
-                        .amount(rs.getBigDecimal("amount"))
-                        .currency(rs.getString("currency"))
-                        .build();
-            }
-            if(account != null){
-                return account;
-            }else {
-                throw new SQLException("Not found any account!");
-            }
-        }
-    }
+//    @Override
+//    public Account getAccountById(Account account) throws SQLException {
+//        String sql = resourceReader.getSQL(SqlScripts.GET_ACCOUNT_BY_CLIENT_ID.getPath());
+//
+//        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+//            stmt.setInt(1, account.getId());
+//            ResultSet rs = stmt.executeQuery();
+//            while (rs.next()) {
+//                account = Account.builder()
+//                        .id(rs.getInt("id"))
+//                        .number(rs.getString("number"))
+//                        .amount(rs.getBigDecimal("amount"))
+//                        .currency(rs.getString("currency"))
+//                        .build();
+//            }
+//            if(account != null){
+//                return account;
+//            }else {
+//                throw new SQLException("Not found any account!");
+//            }
+//        }
+//    }
 
     @Override
     public List<Account> getAllClientAccounts(Client client) throws SQLException {
@@ -87,8 +107,9 @@ public class AccountRepositoryImpl implements AccountRepository {
             while (rs.next()) {
                 Account account = Account.builder()
                         .id(rs.getInt("id"))
+                        .client(client)
                         .number(rs.getString("number"))
-                        .amount(rs.getBigDecimal("amount"))
+                        .amount(rs.getBigDecimal("amount").setScale(2))
                         .currency(rs.getString("currency"))
                         .build();
                 accounts.add(account);
@@ -102,10 +123,10 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateAccount(Client client, Account account) {
+    public void updateAccount( Account account) {
         String sql = resourceReader.getSQL(SqlScripts.UPDATE_ACCOUNT.getPath());
         try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, client.getId());
+            stmt.setInt(1, account.getId());
             stmt.setBigDecimal(2, account.getAmount());
             stmt.execute();
         } catch (SQLException throwables) {

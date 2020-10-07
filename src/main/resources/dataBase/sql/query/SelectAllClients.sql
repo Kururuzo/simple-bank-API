@@ -1,1 +1,1 @@
-select name, email, registered from clients
+select id, name, email, registered from clients

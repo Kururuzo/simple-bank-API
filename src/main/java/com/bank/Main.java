@@ -29,6 +29,8 @@ public class Main {
             System.out.println("Starting server without argument (scripts)");
         }
         Utils.startServer();
+
+
     }
 
 //    // Base URI the Grizzly HTTP server will listen on

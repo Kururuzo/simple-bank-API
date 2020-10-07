@@ -1,1 +1,1 @@
-update accounts set amount = ? where clients_id = ?
+update accounts set amount = ? where id = ?

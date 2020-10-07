@@ -27,24 +27,38 @@ public interface AccountRepository {
      */
     List<Account> getAllClientAccounts(Client client) throws SQLException;
 
-    Account getAccountById(Account account) throws SQLException;
+//    /**
+//     *
+//     * @param account
+//     * @return
+//     * @throws SQLException
+//     * find account by id
+//     */
+//    Account getAccountById(Account account) throws SQLException;
 
     /**
      *
-     * @param client
      * @return
      * @throws SQLException
-     * find client's account
+     * find account by id
      */
-    Account getAccountByClientId(Client client) throws SQLException;
+    Account getAccountById(int id) throws SQLException;
+
+//    /**
+//     *
+//     * @param client
+//     * @return
+//     * @throws SQLException
+//     * find client's account
+//     */
+//    Account getAccountById(Client client) throws SQLException;
 
     /**
      *
-     * @param client
      * @param account
      * update account
      */
-    void updateAccount(Client client, Account account);
+    void updateAccount(Account account);
 
     /**
      *

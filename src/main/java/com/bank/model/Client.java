@@ -17,4 +17,6 @@ public class Client{
     private Date registered = new Date();
     private List<Account> accounts;
 
+
+
 }

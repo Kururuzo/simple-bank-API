@@ -1,6 +1,5 @@
 package com.bank.repository;
 
-import com.bank.model.Account;
 import com.bank.model.Client;
 
 import javax.sql.DataSource;
@@ -67,6 +66,7 @@ public class ClientRepositoryImpl implements ClientRepository {
         try (Connection connection = getConnection();PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, client.getName());
             stmt.setString(2, client.getEmail());
+            stmt.setInt(3, client.getId());
             stmt.execute();
         }
     }
