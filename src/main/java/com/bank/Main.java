@@ -10,6 +10,7 @@ import org.h2.tools.RunScript;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Date;
 
 /**
  * Main class.
@@ -28,9 +29,10 @@ public class Main {
                 RunScript.execute(Utils.getConnection(), new FileReader(arg));
             }
         } else {
+//            RunScript.execute(Utils.getConnection(), new FileReader( "src/main/resources/dataBase/H2init.SQL"));
             System.out.println("Starting server without argument (scripts)");
         }
-        Utils.startServer();
+        Utils.startService();
     }
 }
 

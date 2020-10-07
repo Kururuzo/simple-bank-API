@@ -39,7 +39,7 @@ public class AccountRepositoryImplTest {
 //        dataSource.setURL(DB_URL);
 //        repository = new AccountRepositoryImpl(dataSource);
         repository = new AccountRepositoryImpl(Utils.getDataSource());
-        clientRepository = new ClientRepositoryImpl(Utils.getDataSource());
+        clientRepository = new ClientRepositoryImpl();
     }
 
     @Before

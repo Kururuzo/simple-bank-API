@@ -1,1 +1,1 @@
-select id, name, email, registered from clients where id = ?
+SELECT id, name, email, registered FROM clients WHERE id = ?

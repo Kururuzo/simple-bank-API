@@ -1,1 +1,1 @@
-select * from clients
+SELECT * FROM clients

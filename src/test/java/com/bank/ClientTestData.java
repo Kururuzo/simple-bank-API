@@ -21,7 +21,8 @@ public class ClientTestData {
     public static final int CLIENT_2_ID = 100001;
     public static final int CLIENT_3_ID = 100006;
 
-    public static final Client CLIENT_1 = new Client(CLIENT_1_ID,"Vasay","vasyaTheGreat@mail.ru",new Date(), Arrays.asList(new Account(100002, null, "1111111111", new BigDecimal(1000), "RUB")));
+    public static final Client CLIENT_1 = new Client(CLIENT_1_ID,"Vasay","vasyaTheGreat@mail.ru", new Date(),
+            Arrays.asList(new Account(100002, null, "1111111111", new BigDecimal(1000), "RUB")));
 
 //    public static final Client CLIENT_1 =
 //            new Client(CLIENT_1_ID, "Vasay", "vasyaTheGreat@mail.ru",

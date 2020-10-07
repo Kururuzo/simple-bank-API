@@ -22,7 +22,7 @@ public class AccountService {
 
     public AccountService(DataSource dataSource) {
         this.repository = new AccountRepositoryImpl(dataSource);
-        this.clientRepository = new ClientRepositoryImpl(dataSource);
+        this.clientRepository = new ClientRepositoryImpl();
     }
 
 //    //    Проверка баланса

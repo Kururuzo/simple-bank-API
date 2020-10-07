@@ -9,38 +9,41 @@ import java.util.List;
 public interface ClientRepository {
 
     /**
+     * Get Client by Id.
      *
-     * Метод возвращает список всех клиентов в БД
-     */
-    List<Client> getAll() throws SQLException;
-
-
-    /**
-     *
-     * Добавление клиента
-     */
-    void addClient(Client client) throws SQLException;
-
-    /**
-     *
-     * изменение клиента
-     */
-    void updateClient(Client client) throws SQLException;
-
-    /**
-     *
-     * поиск клиента по ID
+     * @param id
+     * @return Client.
+     * @throws SQLException
      */
     Client getClientById(Integer id) throws SQLException;
 
     /**
+     * Returns all Clients.
      *
-     * удаление клиента
+     * @return List<Client>
+     * @throws SQLException
      */
-    boolean deleteClient(Client client) throws SQLException;
+    List<Client> getAll() throws SQLException;
+
+    /**
+     * Save client.
+     *
+     * @param client
+     * @return client
+     * @throws SQLException if not found or not created
+     */
+    Client save(Client client) throws SQLException;
+
+    /**
+     * Delete Client by Id.
+     *
+     * @param id
+     * @return true == "success"
+     * @throws SQLException
+     */
+    boolean deleteClient(Integer id) throws SQLException;
 
     void addClientAccount(Client client, Account account) throws SQLException;
-
 
 
 //    Client getById (int clientId) throws SQLException;

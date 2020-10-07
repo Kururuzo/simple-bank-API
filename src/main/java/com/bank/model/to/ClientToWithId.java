@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ClientTo {
+public class ClientToWithId {
+    private Integer id;
     private String name;
     private String email;
 
-    public ClientTo(Client client) {
+    public ClientToWithId(Client client) {
+        this.id = client.getId();
         this.name = client.getName();
         this.email = client.getEmail();
     }

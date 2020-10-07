@@ -8,13 +8,12 @@ import org.h2.jdbcx.JdbcDataSource;
 import javax.sql.DataSource;
 import java.net.URI;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Utils {
     // Base URI the Grizzly HTTP server will listen on
     private static final String DB_DRIVER = "org.h2.Driver";
-    static final String DB_URL = "jdbc:h2:mem:bank;"
+    private static final String DB_URL = "jdbc:h2:mem:bank;"
             + "DB_CLOSE_DELAY=-1;"
             + "DATABASE_TO_UPPER=false;";
 //    private static final String DB_USERNAME = "user";
@@ -23,12 +22,14 @@ public class Utils {
     public static final String BASE_URI = "http://localhost:8080/";
 
     private static JdbcDataSource dataSource;
+    private static ResourceReader resourceReader;
 
     static {
         try {
             Class.forName(DB_DRIVER);
             dataSource = new JdbcDataSource();
             dataSource.setURL(DB_URL);
+            resourceReader = new ResourceReader();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -49,14 +50,12 @@ public class Utils {
         return connection;
     }
 
-    public static void closeQuietly(Connection connection) {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException ignore) {
-            //NOP
-        }
+    public static ResourceReader getResReader() {
+        return resourceReader;
+    }
+
+    public static String getSQLPath(String path) {
+        return resourceReader.getSQL(path);
     }
 
     public static DataSource getDataSource() {
@@ -86,5 +85,4 @@ public class Utils {
         System.in.read();
         server.stop();
     }
-
 }

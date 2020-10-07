@@ -1,25 +1,23 @@
 package com.bank.rest;
 
+import com.bank.model.Client;
 import com.bank.model.to.ClientTo;
 import com.bank.repository.Utils;
+import com.bank.rest.JacksonUtils.JacksonUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.h2.tools.RunScript;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.bank.ClientTestData.*;
 import static org.junit.Assert.*;
@@ -31,18 +29,8 @@ public class ClientRestControllerTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        // start the server
-//        server = Main.startServer();
         server = Utils.startServer();
-        // create the client
         javax.ws.rs.client.Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-        //c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
         target = c.target(Utils.BASE_URI);
     }
 
@@ -61,47 +49,72 @@ public class ClientRestControllerTest {
         server.stop();
     }
 
+    //{"id":100000,"name":"Vasay","email":"vasyaTheGreat@mail.ru","registered":"05.10.2020"}
     @Test
     public void getById() {
-        ClientTo clientTo = target.path("/client/" + CLIENT_1_ID).request().get(ClientTo.class);
-        CLIENTS_TO_MATCHER.assertMatch(new ClientTo(CLIENT_1), clientTo);
+        String s = target.path("/client/" + CLIENT_1_ID).request().get(String.class);
+        Client client = JacksonUtils.readValue(s, Client.class);
+        CLIENTS_MATCHER.assertMatch(CLIENT_1, client);
+    }
+
+    //[{"id":100000,"name":"Vasay","email":"vasyaTheGreat@mail.ru","registered":"06.10.2020"},{"id":100001,"name":"Petya","email":"petayTheBest@yandex.ru","registered":"06.10.2020"}]
+    @Test
+    public void getAll() {
+        String s = target.path("/client/all").request().get(String.class);
+        List<Client> clientList = JacksonUtils.readValues(s, Client.class);
+        CLIENTS_MATCHER.assertMatch(clientList, CLIENTS);
+    }
+
+    //100006
+    @Test
+    public void add() {
+        String s = target.path("/client/all").request().get(String.class);
+        List<Client> oldClientList = JacksonUtils.readValues(s, Client.class);
+
+        ClientTo client = new ClientTo(CLIENT_3);
+
+        Response response = target.path("/client/add").request()
+                .post(Entity.entity(client, MediaType.APPLICATION_JSON));
+
+        assertEquals("should return status 201", 201, response.getStatus());
+
+        String s1 = target.path("/client/all").request().get(String.class);
+        List<Client> newClientList = JacksonUtils.readValues(s1, Client.class);
     }
 
     @Test
-    public void getAll() {
-        Response response = target.path("/client/all").request().get();
-        assertEquals("should return status 200", 200, response.getStatus());
+    public void update() {
+        Client updClient = Client.builder()
+                .id(CLIENT_1_ID)
+                .name("new name")
+                .email("new@mail.com")
+                .build();
 
-        GenericType<List<ClientTo>> generic = new GenericType<List<ClientTo>>() {
-        };
+        Response response = target.path("/client/update").request()
+                .post(Entity.entity(updClient, MediaType.APPLICATION_JSON));
 
-        List<ClientTo> actualTos  = response.readEntity(generic);
-        List<ClientTo> expectedTos = Arrays.asList(CLIENT_1, CLIENT_2).stream()
-                .map(ClientTo::new).collect(Collectors.toList());
+        assertEquals("should return status 201", 202, response.getStatus());
 
-        CLIENTS_TO_MATCHER.assertMatch(actualTos, expectedTos);
+        String s = target.path("/client/" + CLIENT_1_ID).request().get(String.class);
+        Client client = JacksonUtils.readValue(s, Client.class);
+
+        CLIENTS_MATCHER.assertMatch(updClient, client);
     }
 
+    //100000
+    @Test
+    public void delete() {
+        String s = target.path("/client/all").request().get(String.class);
+        List<Client> oldClientList = JacksonUtils.readValues(s, Client.class);
 
+        String s1 = target.path("/client/delete/" + CLIENT_1_ID).request().get(String.class);
+        Assert.assertEquals(s1, String.valueOf(CLIENT_1_ID));
 
-//    @Test
-//    public void getIt() {
-//        String responseMsg = target.path("client").request().get(String.class);
-//        assertEquals("Client got it!", responseMsg);
-//    }
-//
-//    @Test
-//    public void get() {
-//        String responseMsg = target.path("/client/100000").request().get(String.class);
-//        System.out.println(responseMsg);
-//
-//    }
+        String s2 = target.path("/client/all").request().get(String.class);
+        List<Client> newClientList = JacksonUtils.readValues(s2, Client.class);
 
+        oldClientList.removeAll(newClientList);
 
-//    @Test
-//    public void postJson() {
-//        String responseMsg = target.path("/client/post").request().get(String.class);
-//        System.out.println(responseMsg);
-//
-//    }
+        assertEquals(1, oldClientList.size());
+    }
 }

@@ -12,7 +12,7 @@ public class ClientService {
     private ClientRepository repository;
 
     public ClientService() {
-        this.repository = new ClientRepositoryImpl(Utils.getDataSource());
+        this.repository = new ClientRepositoryImpl();
     }
 
     public Client getById(Integer id) {
@@ -41,6 +41,42 @@ public class ClientService {
         return clientList;
     }
 
+    public Client addNewClient(Client client) {
+        Client newClient = null;
+        try {
+            newClient = repository.save(client);
+            if (client == null) {
+                throw new SQLException("Client was not created!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return newClient;
+    }
 
+    public Client updateClient(Client client) {
+        try {
+            client = repository.save(client);
+            if (client == null) {
+                throw new SQLException("Client was not updated!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client;
+    }
+
+    public boolean deleteClient(Integer id) {
+        boolean success = false;
+        try {
+            success = repository.deleteClient(id);
+            if (!success) {
+                throw new SQLException("Client was not deleted!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 
 }

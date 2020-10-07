@@ -11,7 +11,7 @@ public enum SqlScripts {
      */
     SELECT_ALL_ACCOUNTS("dataBase/sql/query/AccountSelectAll.sql"),
 
-    ADD_CLIENT("dataBase/sql/query/AddClient.sql"),
+    SAVE_CLIENT("dataBase/sql/query/SaveClient.sql"),
 
     SELECT_ALL_CLIENTS("dataBase/sql/query/SelectAllClients.sql"),
 
